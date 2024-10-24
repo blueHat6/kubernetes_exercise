@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: multistage-test-deployment
+  labels:
+    app: multistage-test
+spec:
+  replicas: 3  # Number of pod replicas
+  selector:
+    matchLabels:
+      app: multistage-test
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1  # Allow 1 additional pod during updates
+      maxUnavailable: 1  # Allow up to 1 pod to be unavailable during updates
+  template:
+    metadata:
+      labels:
+        app: multistage-test
+    spec:
+      containers:
+      - name: multistage-test-container
+        image: akiraazra/multistage-test:latest  
+        ports:
+        - containerPort: 80  
+        resources:
+          requests:
+            memory: "256Mi"  
+            cpu: "250m"      
+          limits:
+            memory: "512Mi" 
+            cpu: "500m"      
